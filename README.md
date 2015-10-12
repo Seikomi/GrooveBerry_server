@@ -1,12 +1,16 @@
 # GrooveBerry_server
 Serveur de musique contrôlable à distance par socket Java
 
+- [Installation](#installation)
+- [Utilisation](#utilisation)
+- [Notes de version](#notes-de-version)
+
 ## Installation
 1. Cloner le répertoire `Seikomi/GrooveBerry_server` : `git clone https://github.com/Seikomi/GrooveBerry_server.git`
 2. Lancer `mvn install`
 
 ## Utilisation
-1. Aller dans le fichier `GrooveBerry_server/src/main/java/grooveberry_server/server/net/Server.java` et modifier la ligne 89 avec le chemin absolut du répertoire de musique à lire.
+1. Aller dans le fichier `GrooveBerry_server/src/main/java/grooveberry_server/server/net/Server.java` et modifier la ligne 89 avec le chemin absolu du répertoire de musique à lire.
 2. Recompiler
 3. Aller dans `GrooveBerry_server/target/` et executer le jar
 
