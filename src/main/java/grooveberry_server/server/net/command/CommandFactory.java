@@ -50,6 +50,9 @@ public class CommandFactory {
         case "#RANDOMISE":
 			commandToReturn = new Randomise(new ReadingQueueManager());
 			break;
+        case "#SONG":
+			commandToReturn = new WhatIsThisSong(new ReadingQueueManager());
+			break;
 		case "#DOWNLOAD":
 			commandToReturn = new Download(argumentsTab, new FileTransfertManager(pipedOutput));
 			break;

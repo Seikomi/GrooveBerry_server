@@ -7,6 +7,7 @@ import grooveberry_server.server.net.command.CommandFactory;
 import grooveberry_server.server.net.command.CommandIntf;
 import grooveberry_server.server.net.thread.ClientAccept;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PipedOutputStream;
 import java.net.ServerSocket;
@@ -23,12 +24,12 @@ import org.slf4j.LoggerFactory;
  * Server est un TODO singleton du server de musique GrooveBerry.
  * Il peut etre lancer sous deux modes selon le constructeur choisi :
  * avec ou sans stream de sortie (voir {@link PipedOutputStream}).
- * Il utilise deux ports définies par les parametres :
+ * Il utilise deux ports dÃ©finies par les parametres :
  * <ul>
- * <li>{@code int serverCommandePort} : port gérant les commandes
- * (TODO définie selon un protocole) envoyées au serveur</li>
- * <li>{@code int serverTransfertPort} : port gérant les données
- * (fichiers audios, xml, ...) envoyées au serveur</li>
+ * <li>{@code int serverCommandePort} : port gÃ©rant les commandes
+ * (TODO dÃ©finie selon un protocole) envoyÃ©es au serveur</li>
+ * <li>{@code int serverTransfertPort} : port gÃ©rant les donnÃ©es
+ * (fichiers audios, xml, ...) envoyÃ©es au serveur</li>
  * </ul>
  * <p>
  * Son but est de fournir les services suivants :
@@ -53,6 +54,8 @@ public class Server {
 
     private Thread connectionClientsThread;
     private Thread communicationThread;
+
+	private final String userHomePath = System.getProperty("user.home");
     
     public Server(int serverCommandePort, int serverTransfertPort) throws InterruptedException {
         try {
@@ -74,6 +77,7 @@ public class Server {
     }
     
     public void start() {
+    	initServerFiles();
         initReadingQueue();
         startThreadsServer();
     }
@@ -83,17 +87,63 @@ public class Server {
 		CommandIntf commande = commandeFactory.getCommande();
         commande.execute();
     }
+    
+    private void initServerFiles() {
+    	Path mainDirectoryPath = Paths.get(userHomePath	+ "/.grooveberry/");
+    	Path serverPropertiesPath = Paths.get(userHomePath + "/.grooveberry/grooveberry.properties");
+    	Path serverLibraryDirectoryPath = Paths.get(userHomePath + "/.grooveberry/library/");
+    	
+    	File mainDirectory = mainDirectoryPath.toFile();
+    	File serverProperties = serverPropertiesPath.toFile();
+    	File serverLibraryDirectory = serverLibraryDirectoryPath.toFile();
+    	
+    	try {
+    		if (!mainDirectory.exists()) {
+    			boolean isCreate = mainDirectory.mkdir();
+    			if (!isCreate) {
+    				throw new IOException();
+    			} else {
+    				LOGGER.info("Create the directory : " + mainDirectoryPath);
+    			}
+    		}
+    		if (!serverProperties.exists()) {
+				boolean isCreate = serverProperties.createNewFile();
+				if (!isCreate) {
+    				throw new IOException();
+    			} else {
+    				LOGGER.info("Create the file :" + serverPropertiesPath);
+    			}
+    		}
+    		if (!serverLibraryDirectory.exists()) {
+				boolean isCreate = serverLibraryDirectory.mkdir();
+				if (!isCreate) {
+    				throw new IOException();
+    			} else {
+    				LOGGER.info("Create the directory :" + serverLibraryDirectoryPath);
+    			}
+    		}
+    	} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 
     private void initReadingQueue() {
         try {
-            Path directoryPath = Paths.get("C:\\Users\\nicolas\\Music\\GrooveBerry_Musique");
+            Path directoryPath = Paths.get(userHomePath + "/.grooveberry/library/");
+            
+            if (directoryPath.toFile().exists())
 
-            LOGGER.debug("Scanning audio files in directory : " + directoryPath.toAbsolutePath());
-            AudioFileDirectoryScanner directoryScanner = new AudioFileDirectoryScanner(directoryPath);
-
-            LOGGER.debug("Loading audio files in reading queue");
-            ArrayList<AudioFile> audioFileList = directoryScanner.getAudioFileList();
-            ReadingQueue.getInstance().addList(audioFileList);
+	            LOGGER.debug("Scanning audio files in directory : " + directoryPath.toAbsolutePath());
+	            AudioFileDirectoryScanner directoryScanner = new AudioFileDirectoryScanner(directoryPath);
+	
+	            LOGGER.debug("Loading audio files in reading queue");
+	            ArrayList<AudioFile> audioFileList = directoryScanner.getAudioFileList();
+	            if (audioFileList.size() != 0) {
+	            	ReadingQueue.getInstance().addList(audioFileList);
+	            } else {
+	            	LOGGER.debug("No audio files in " + userHomePath + "/library/ (normal if this is the first launch)");
+	            }
         } catch (IOException e) {
             LOGGER.error("Directory scanning error", e);
         }

@@ -151,6 +151,11 @@ public class ReadingQueueManager implements Observer {
             readingQueue.setRandomised(true);
         }
     }
+    
+	public String whatIsThisSong() {
+		return readingQueue.getCurrentTrack().getName();
+		
+	}
 
 	/**
 	 * Structure de données represantant l'etat d'un fichier audio.
