@@ -1,11 +1,13 @@
 package grooveberry_server.manager;
 
+import grooveberry_server.AudioUtility;
 import grooveberry_server.audiofile.AudioFile;
 import grooveberry_server.audiofile.ReadingQueue;
 
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,13 +100,11 @@ public class ReadingQueueManager implements Observer {
 	 */
 	private void changeCurrentTrack(boolean forward, TrackFlags trackFlags) {
 		int shiftInt;
-		if (forward) {
-			if (readingQueue.isRandomised()) {
-				Random rand = new Random();
-				shiftInt = rand.nextInt(readingQueue.size() - 1);
-			} else {
-				shiftInt = readingQueue.getCurrentTrackPosition() + 1;
-			}	
+		if (readingQueue.isRandomised()) {
+			Random rand = new Random();
+			shiftInt = rand.nextInt(readingQueue.size() - 1);
+		} else if (forward) {
+			shiftInt = readingQueue.getCurrentTrackPosition() + 1;
 		} else {
 			shiftInt =  readingQueue.getCurrentTrackPosition() - 1;
 		}
@@ -154,6 +154,26 @@ public class ReadingQueueManager implements Observer {
     
 	public String whatIsThisSong() {
 		return readingQueue.getCurrentTrack().getName();
+		
+	}
+	
+	public void volumeUp() {
+		Float volume = AudioUtility.getMasterOutputVolume();
+		if (volume >= 0f && volume < 0.9f) {
+			AudioUtility.setMasterOutputVolume(volume + 0.1f);
+		} else if (volume > 0.9 && volume < 1f) {
+			AudioUtility.setMasterOutputVolume(1f);
+		}
+			
+	}
+	
+	public void volumeDown() {
+		Float volume = AudioUtility.getMasterOutputVolume();
+		if (volume >= 0.1f && volume < 1f) {
+			AudioUtility.setMasterOutputVolume(volume - 0.1f);
+		} else if (volume < 0.1f && volume > 0f) {
+			AudioUtility.setMasterOutputVolume(0f);
+		}
 		
 	}
 
@@ -220,5 +240,9 @@ public class ReadingQueueManager implements Observer {
 	private void stopOfPlay() {
 		LOGGER.info("Stop of Play event");
 	}
+
+
+
+
 
 }

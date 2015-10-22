@@ -17,9 +17,9 @@ public class ServerApp {
 	public final static int SERVER_TRANSFERT_PORT = 3009;
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
-		PipedOutputStream output = new PipedOutputStream(); 	 // Server -->
-		PipedInputStream  input  = new PipedInputStream(output); // --> GUI
-		LOGGER.debug("Create communication pipes : server --> GUI");
+//		PipedOutputStream output = new PipedOutputStream(); 	 // Server -->
+//		PipedInputStream  input  = new PipedInputStream(output); // --> GUI
+//		LOGGER.debug("Create communication pipes : server --> GUI");
 		
 		Server server = new Server(SERVER_COMMANDE_PORT, SERVER_TRANSFERT_PORT/*, output*/);
 		LOGGER.debug("Server created on ports :");
@@ -28,9 +28,9 @@ public class ServerApp {
         server.start();
 		LOGGER.info("Server started");
         
-		MainWindow windows = new MainWindow(input);
-		windows.setVisible(true);
-		LOGGER.info("Server GUI started");
+//		MainWindow windows = new MainWindow(input);
+//		windows.setVisible(true);
+//		LOGGER.info("Server GUI started");
     }
         
 }
