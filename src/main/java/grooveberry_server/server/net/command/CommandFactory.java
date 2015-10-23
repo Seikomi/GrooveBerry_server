@@ -53,6 +53,9 @@ public class CommandFactory {
         case "#SONG":
 			commandToReturn = new WhatIsThisSong(new ReadingQueueManager());
 			break;
+        case "#LIST":
+			commandToReturn = new WhatIsTheReadingQueue(new ReadingQueueManager());
+			break;
         case "#VOLUP":
 			commandToReturn = new VolumeUp(new ReadingQueueManager());
 			break;

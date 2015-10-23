@@ -157,6 +157,18 @@ public class ReadingQueueManager implements Observer {
 		
 	}
 	
+	public String whatIsTheReadingQueue() {
+		StringBuilder stringBuilder = new StringBuilder();
+		for (AudioFile audioFile : readingQueue.getAudioFileList()) {
+			if (audioFile.equals(readingQueue.getCurrentTrack())) {
+				stringBuilder.append(">> ");
+			}
+			stringBuilder.append(audioFile.getName());
+			stringBuilder.append("\n");
+		}
+		return stringBuilder.toString();
+	}
+	
 	public void volumeUp() {
 		Float volume = AudioUtility.getMasterOutputVolume();
 		if (volume >= 0f && volume < 0.9f) {
@@ -240,6 +252,8 @@ public class ReadingQueueManager implements Observer {
 	private void stopOfPlay() {
 		LOGGER.info("Stop of Play event");
 	}
+
+
 
 
 
