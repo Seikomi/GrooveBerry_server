@@ -1,4 +1,6 @@
-package grooveberry_server.audiofile;
+package grooveberry_server.readingqueue;
+
+import grooveberry_server.audiofile.AudioFile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +28,7 @@ public final class ReadingQueue {
 	/* Singleton Pattern */
 	private static ReadingQueue instance;
 	
-	public static synchronized ReadingQueue getInstance() {
+	protected static synchronized ReadingQueue getInstance() {
 		if (instance == null) {
 			instance = new ReadingQueue();
 		}
