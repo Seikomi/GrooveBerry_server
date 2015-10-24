@@ -2,7 +2,7 @@ package grooveberry_server.server.net.thread;
 
 import grooveberry_server.server.net.Server;
 import grooveberry_server.server.net.command.CommandFactory;
-import grooveberry_server.server.net.command.CommandIntf;
+import grooveberry_server.server.net.command.CommandFactory;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -32,7 +32,7 @@ public class ClientTreatment implements Runnable {
 
 	@Override
 	public void run() {
-		sendMessage("Welcome to GrooveBerry Server");
+		sendMessage("#HELLO Welcome to GrooveBerry Server");
 		
 		connectionClosed = false;
 		while(!connectionClosed) {
@@ -78,17 +78,26 @@ public class ClientTreatment implements Runnable {
 	}
 	
 	private void commandeExecute(String receivingMessage) {
-		CommandFactory commandeFactory = new CommandFactory(receivingMessage, pipedOutput);
-		CommandIntf commande = commandeFactory.getCommande();
-		if (commande != null) {
-			String commandReturnState = commande.execute();
-			if ("#EXIT OK".equals(commandReturnState)) {
-				connectionClosed = true;
-			}
-			sendMessage(commandReturnState);
-		} else {
+		CommandFactory commandFactory = CommandFactory.init();
+		String commandReturnState = commandFactory.executeCommand(receivingMessage);
+		if (commandReturnState == null) {
 			sendMessage(receivingMessage);
+		} else if ("#EXIT OK".equals(commandReturnState)) {
+			connectionClosed = true;
+		} else {
+			sendMessage(commandReturnState);
 		}
+//		CommandFactory commandeFactory = new CommandFactory(receivingMessage, pipedOutput);
+//		CommandIntf commande = commandeFactory.getCommande();
+//		if (commande != null) {
+//			String commandReturnState = commande.execute();
+//			if ("#EXIT OK".equals(commandReturnState)) {
+//				connectionClosed = true;
+//			}
+//			sendMessage(commandReturnState);
+//		} else {
+//			sendMessage(receivingMessage);
+//		}
 	}
 
 }

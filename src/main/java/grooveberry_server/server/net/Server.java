@@ -2,9 +2,10 @@ package grooveberry_server.server.net;
 
 import grooveberry_server.audiofile.AudioFile;
 import grooveberry_server.audiofile.AudioFileDirectoryScanner;
-import grooveberry_server.audiofile.ReadingQueue;
+import grooveberry_server.readingqueue.ReadingQueue;
+import grooveberry_server.readingqueue.ReadingQueueManager;
 import grooveberry_server.server.net.command.CommandFactory;
-import grooveberry_server.server.net.command.CommandIntf;
+import grooveberry_server.server.net.command.CommandInterface;
 import grooveberry_server.server.net.thread.ClientAccept;
 
 import java.io.File;
@@ -55,7 +56,7 @@ public class Server {
     private Thread connectionClientsThread;
     private Thread communicationThread;
 
-	private final String userHomePath = System.getProperty("user.home");
+	public static final String userHomePath = System.getProperty("user.home");
     
     public Server(int serverCommandePort, int serverTransfertPort) throws InterruptedException {
         try {
@@ -83,9 +84,8 @@ public class Server {
     }
     
     public static void sendCommand(String command) {
-        CommandFactory commandeFactory = new CommandFactory(command);
-		CommandIntf commande = commandeFactory.getCommande();
-        commande.execute();
+        CommandFactory commandeFactory = CommandFactory.init();
+        commandeFactory.executeCommand(command);		
     }
     
     private void initServerFiles() {
@@ -133,6 +133,9 @@ public class Server {
             Path directoryPath = Paths.get(userHomePath + "/.grooveberry/library/");
             
             if (directoryPath.toFile().exists())
+            	
+            	// LibraryManager.getInstance().scanDirectory();
+            	
 
 	            LOGGER.debug("Scanning audio files in directory : " + directoryPath.toAbsolutePath());
 	            AudioFileDirectoryScanner directoryScanner = new AudioFileDirectoryScanner(directoryPath);
@@ -140,7 +143,7 @@ public class Server {
 	            LOGGER.debug("Loading audio files in reading queue");
 	            ArrayList<AudioFile> audioFileList = directoryScanner.getAudioFileList();
 	            if (audioFileList.size() != 0) {
-	            	ReadingQueue.getInstance().addList(audioFileList);
+	            	ReadingQueueManager.getInstance().addToReadingQueue(audioFileList);
 	            } else {
 	            	LOGGER.debug("No audio files in " + userHomePath + "/library/ (normal if this is the first launch)");
 	            }
