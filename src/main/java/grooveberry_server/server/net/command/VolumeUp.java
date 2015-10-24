@@ -1,21 +1,15 @@
 package grooveberry_server.server.net.command;
 
-import grooveberry_server.manager.ReadingQueueManager;
+import grooveberry_server.readingqueue.ReadingQueueManager;
 import grooveberry_server.server.net.Server;
 
-public class VolumeUp implements CommandIntf {
-	
-	private ReadingQueueManager readingQueueManager;
-	
-	public VolumeUp(ReadingQueueManager readingQueueManager) {
-		this.readingQueueManager = readingQueueManager;
-	}
+public class VolumeUp implements CommandInterface {
 	
 	@Override
-	public String execute() {
+	public String apply() {
 		Server.printMessageInGui("[Client] Send VolumeUp command");
 		LOGGER.info("Turn Up the volume by 10%!");
-		readingQueueManager.volumeUp();
+		ReadingQueueManager.getInstance().volumeUp();
 		return "#VOLUP OK";
 	}
 

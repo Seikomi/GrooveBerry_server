@@ -1,21 +1,15 @@
 package grooveberry_server.server.net.command;
 
-import grooveberry_server.manager.ReadingQueueManager;
+import grooveberry_server.readingqueue.ReadingQueueManager;
 import grooveberry_server.server.net.Server;
 
-public class Prev implements CommandIntf {
+public class Prev implements CommandInterface {
 	
-	private ReadingQueueManager readingQueueManager;
-	
-	public Prev(ReadingQueueManager readingQueueManager) {
-		this.readingQueueManager = readingQueueManager;
-	}
-
 	@Override
-	public String execute() {
+	public String apply() {
 		Server.printMessageInGui("[Client] Send Prev command");
 		LOGGER.info("Switch to previous track in reading queue");
-		readingQueueManager.prev();
+		ReadingQueueManager.getInstance().prev();
 		return "#PREV OK";
 	}
 

@@ -1,21 +1,15 @@
 package grooveberry_server.server.net.command;
 
-import grooveberry_server.manager.ReadingQueueManager;
+import grooveberry_server.readingqueue.ReadingQueueManager;
 import grooveberry_server.server.net.Server;
 
-public class VolumeDown implements CommandIntf {
-	
-	private ReadingQueueManager readingQueueManager;
-	
-	public VolumeDown(ReadingQueueManager readingQueueManager) {
-		this.readingQueueManager = readingQueueManager;
-	}
-	
+public class VolumeDown implements CommandInterface {
+
 	@Override
-	public String execute() {
+	public String apply() {
 		Server.printMessageInGui("[Client] Send VolumeDown command");
 		LOGGER.info("Turn Down the volume by 10%!");
-		readingQueueManager.volumeDown();
+		ReadingQueueManager.getInstance().volumeDown();
 		return "#VOLDOWN OK";
 	}
 

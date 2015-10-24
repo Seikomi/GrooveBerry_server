@@ -5,27 +5,20 @@
  */
 package grooveberry_server.server.net.command;
 
-import grooveberry_server.manager.ReadingQueueManager;
+import grooveberry_server.readingqueue.ReadingQueueManager;
 import grooveberry_server.server.net.Server;
-import static grooveberry_server.server.net.command.CommandIntf.LOGGER;
 
 /**
  *
  * @author nicolas
  */
-public class Randomise implements CommandIntf {
-
-    private ReadingQueueManager readingQueueManager;
-	
-	public Randomise(ReadingQueueManager readingQueueManager) {
-		this.readingQueueManager = readingQueueManager;
-	}
+public class Randomise implements CommandInterface {
 
 	@Override
-	public String execute() {
+	public String apply() {
 		Server.printMessageInGui("[Client] Send Randomize command");
 		LOGGER.info("Randomising reading queue");
-		readingQueueManager.randomise();
+		ReadingQueueManager.getInstance().randomise();
 		return "#RANDOMISE OK";
 	}
     

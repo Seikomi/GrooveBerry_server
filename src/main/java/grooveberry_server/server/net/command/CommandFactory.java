@@ -1,83 +1,49 @@
 package grooveberry_server.server.net.command;
 
-import java.io.PipedOutputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.StringTokenizer;
+import grooveberry_server.readingqueue.ReadingQueueManager;
+import grooveberry_server.server.net.Server;
 
-import grooveberry_server.manager.FileTransfertManager;
-import grooveberry_server.manager.ReadingQueueManager;
+import java.util.HashMap;
 
 public class CommandFactory {
-	private String commandString;
-	private PipedOutputStream pipedOutput;
-
-	public CommandFactory(String commandString, PipedOutputStream pipedOutput) {
-		this.commandString = commandString;
-		this.pipedOutput = pipedOutput;
-	}
-    
-    public CommandFactory(String commandString) {
-		this.commandString = commandString;
-		this.pipedOutput = null;
+	private final HashMap<String, CommandInterface>	commands;
+	
+	private CommandFactory() {
+		this.commands = new HashMap<>();
 	}
 
-	public CommandIntf getCommande() {
-		CommandIntf commandToReturn = null;
-		
-		StringTokenizer stringTokenizer = new StringTokenizer(commandString, "@");
-		String commandStringIndentifieur = stringTokenizer.nextToken();
-		
-		Path[] argumentsTab = new Path[stringTokenizer.countTokens()];
-		for (int i = 0; i < argumentsTab.length; i++) {
-			argumentsTab[i] = Paths.get(stringTokenizer.nextToken());
-			System.out.println(argumentsTab[i]);
-		}
-		
-		switch (commandStringIndentifieur) {
-		case "#PLAY":
-			commandToReturn = new Play(new ReadingQueueManager());
-			break;
-		case "#PAUSE":
-			commandToReturn = new Pause(new ReadingQueueManager());
-			break;
-		case "#NEXT":
-			commandToReturn = new Next(new ReadingQueueManager());
-			break;
-		case "#PREV":
-			commandToReturn = new Prev(new ReadingQueueManager());
-			break;
-        case "#RANDOMISE":
-			commandToReturn = new Randomise(new ReadingQueueManager());
-			break;
-        case "#SONG":
-			commandToReturn = new WhatIsThisSong(new ReadingQueueManager());
-			break;
-        case "#LIST":
-			commandToReturn = new WhatIsTheReadingQueue(new ReadingQueueManager());
-			break;
-        case "#VOLUP":
-			commandToReturn = new VolumeUp(new ReadingQueueManager());
-			break;
-        case "#VOLDOWN":
-			commandToReturn = new VolumeDown(new ReadingQueueManager());
-			break;
-		case "#DOWNLOAD":
-			commandToReturn = new Download(argumentsTab, new FileTransfertManager(pipedOutput));
-			break;
-		case "#UPLOAD":
-			commandToReturn = new Upload(argumentsTab, new FileTransfertManager(pipedOutput));
-			break;
-		case "#EXIT":
-			commandToReturn = new Exit();
-			break;
-
-		default:
-			break;
-		}
-		return commandToReturn;
+	public void addCommand(String name, CommandInterface command) {
+		this.commands.put(name, command);
 	}
 	
-	
+	public String executeCommand(String name) {
+		if ( this.commands.containsKey(name) ) {
+			return this.commands.get(name).apply();
+		}
+		return null;
+	}
 
+	public void listCommands() {
+		// using stream (Java 8)
+		System.out.println("Commands enabled :");
+		this.commands.keySet().stream().forEach(System.out::println);
+	}
+	
+	/* Factory pattern */
+	public static CommandFactory init() {
+		CommandFactory cf = new CommandFactory();
+		
+		// commands are added here using lambda. It also possible to dynamically add commands without editing code.
+		cf.addCommand("#PLAY", new Play());
+		cf.addCommand("#PAUSE", new Pause());
+		cf.addCommand("#NEXT", new Next());
+		cf.addCommand("#PREV", new Prev());
+		cf.addCommand("#RANDOMISE", new Randomise());
+		cf.addCommand("#VOLDOWN", new VolumeDown());
+		cf.addCommand("#VOLUP", new VolumeUp());
+		cf.addCommand("#SONG", new WhatIsThisSong());
+		cf.addCommand("#LIST", new WhatIsTheReadingQueue());
+		
+		return cf;
+	}
 }

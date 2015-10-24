@@ -1,22 +1,16 @@
 package grooveberry_server.server.net.command;
 
-import grooveberry_server.manager.ReadingQueueManager;
+import grooveberry_server.readingqueue.ReadingQueueManager;
 import grooveberry_server.server.net.Server;
 
 
-public class Next implements CommandIntf {
-
-	private ReadingQueueManager readingQueueManager;
-
-	public Next(ReadingQueueManager readingQueueManager) {
-		this.readingQueueManager = readingQueueManager;
-	}
+public class Next implements CommandInterface {
 
 	@Override
-	public String execute() {
+	public String apply() {
 		Server.printMessageInGui("[Client] Send Next command");
 		LOGGER.info("Switch to next track in reading queue");
-		readingQueueManager.next();
+		ReadingQueueManager.getInstance().next();
 		return "#NEXT OK";
 	}
 
