@@ -1,6 +1,10 @@
-package grooveberry_server.audiofile;
+package grooveberry_server.readingqueue;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import grooveberry_server.audiofile.AudioFile;
+import grooveberry_server.readingqueue.ReadingQueue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -211,5 +215,15 @@ public class ReadingQueueTest {
 		assertEquals(2, readingQueue.getCurrentTrackPosition());
 	}
 	
+	@Test
+	public void testChangeRandomState() {
+		assertFalse(readingQueue.isRandomised());
+		
+		readingQueue.setRandomised(true);
+		assertTrue(readingQueue.isRandomised());
+		
+		readingQueue.setRandomised(false);
+		assertFalse(readingQueue.isRandomised());
+	}
 
 }
