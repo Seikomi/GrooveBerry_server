@@ -7,7 +7,7 @@ public class WhatIsThisSong implements CommandInterface {
 
 	@Override
 	public String apply() {
-		Server.printMessageInGui("[Client] Send WhatIsThisSong command");
+		//Server.printMessageInGui("[Client] Send WhatIsThisSong command");
 		LOGGER.info("Questioning inference data base !");
 		return "#SONG " + ReadingQueueManager.getInstance().whatIsThisSong();
 	}

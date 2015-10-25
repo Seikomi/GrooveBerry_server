@@ -22,7 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Server est un TODO singleton du server de musique GrooveBerry.
+ * La classe Server est un server de musique pilotable à distance par sockets
+ * Java. <br/>
  * Il peut etre lancer sous deux modes selon le constructeur choisi :
  * avec ou sans stream de sortie (voir {@link PipedOutputStream}).
  * Il utilise deux ports définies par les parametres :
@@ -37,12 +38,13 @@ import org.slf4j.LoggerFactory;
  * <ul>
  * <li>gestion de la piste en cours de lecture : #PLAY, #PAUSE</li>
  * <li>gestion de la file de lecture : #PREV, #NEXT</li>
+ * <li>gestion du volume : #VOLUP, #VOLDOWN</li>
+ * <li>recuperation d'information sur le serveur : #SONG, #LIST</li>
  * <li>gestion du transfert de fichiers : #UPLOAD@[nom du fichier]...,
  * #DOWNLOAD@[nom du fichier]...</li>
  * </ul>
  * 
  * @author  Nicolas Symphorien
- * @version %I%, %G%
  * @since   1.0
  */
 public class Server {
@@ -58,15 +60,26 @@ public class Server {
 
 	public static final String userHomePath = System.getProperty("user.home");
     
+	/**
+	 * Créer une instance de serveur GrooveBerry utilisant deux sockets.
+	 * 
+	 * @param serverCommandePort
+	 * @param serverTransfertPort
+	 * @throws InterruptedException
+	 */
     public Server(int serverCommandePort, int serverTransfertPort) throws InterruptedException {
-        try {
-            this.serverSocketCommande = new ServerSocket(serverCommandePort);
-            this.serverSocketTransfert = new ServerSocket(serverTransfertPort);
-        } catch (IOException e) {
-            LOGGER.error("Unexpexted socket deconnection", e);
-        }
+        this(serverCommandePort, serverTransfertPort, null);
     }
-
+    
+    /**
+     * Créer une instance de serveur GrooveBerry utilisant deux sockets. <br/>
+     * Peur communiquer avec un thread via {@code serverOutput}
+     * 
+     * @param serverCommandePort
+     * @param serverTransfertPort
+     * @param serverOutput
+     * @throws InterruptedException
+     */
     public Server(int serverCommandePort, int serverTransfertPort, PipedOutputStream serverOutput) throws InterruptedException {
         this.serverOutput = serverOutput;
         try {
@@ -77,17 +90,20 @@ public class Server {
         }
     }
     
+    /**
+     * Démarre le serveur GrooveBerry, créer les dossiers et fichiers
+     * nécessaires et initialise la file de lecture avec les fichiers
+     * dans ~/.grooveberry/library/ (UNIX seulement) 
+     */
     public void start() {
     	initServerFiles();
         initReadingQueue();
         startThreadsServer();
     }
     
-    public static void sendCommand(String command) {
-        CommandFactory commandeFactory = CommandFactory.init();
-        commandeFactory.executeCommand(command);		
-    }
-    
+    /**
+     * Initialise les fichiers et dossiers nécessaires au serveur.
+     */
     private void initServerFiles() {
     	Path mainDirectoryPath = Paths.get(userHomePath	+ "/.grooveberry/");
     	Path serverPropertiesPath = Paths.get(userHomePath + "/.grooveberry/grooveberry.properties");
@@ -127,7 +143,10 @@ public class Server {
 			e.printStackTrace();
 		}
     }
-
+    
+    /**
+     * Rempli la file de lecture avec le contenue du dossier library/
+     */
     private void initReadingQueue() {
         try {
             Path directoryPath = Paths.get(userHomePath + "/.grooveberry/library/");
@@ -153,55 +172,61 @@ public class Server {
 
     }
     
+    /**
+     * Lance le thread de gestions des commandes et le thread de gestion des
+     * transfert de fichiers.
+     */
     private void startThreadsServer() {
         connectionClientsThread = new Thread(new ClientAccept(serverSocketCommande, serverSocketTransfert));
         connectionClientsThread.setName("ClientAccept");
         connectionClientsThread.start();
         LOGGER.debug("Start ClientAccept Thread");
         
-        if (serverOutput != null) {
-            communicationThread = new Thread(new CommunicationThread(serverOutput));
-            communicationThread.setName("CommunicationToGui");
-            communicationThread.start();
-            LOGGER.debug("Start CommunicationToGui Thread");
-        }
+//        if (serverOutput != null) {
+//            communicationThread = new Thread(new CommunicationThread(serverOutput));
+//            communicationThread.setName("CommunicationToGui");
+//            communicationThread.start();
+//            LOGGER.debug("Start CommunicationToGui Thread");
+//        }
     }
     
-    public static void printMessageInGui(String message) {
-        CommunicationThread.communicationQueue.offer(message);
-        synchronized (CommunicationThread.communicationQueue) {
-            CommunicationThread.communicationQueue.notifyAll();
-        }
-    }
-    
-    private static class CommunicationThread implements Runnable {
-
-        public static final Queue<String> communicationQueue = new ConcurrentLinkedQueue<>();
-
-        private final PipedOutputStream serverOutput;
-
-        public CommunicationThread(PipedOutputStream serverOutput) {
-            this.serverOutput = serverOutput;
-        }
-
-        @Override
-        public void run() {
-            while (true) {
-                try {
-                    while (!communicationQueue.isEmpty()) {
-                        String message = communicationQueue.poll();
-                        if (message != null) {
-                            this.serverOutput.write((message + "\n").getBytes());
-                            this.serverOutput.flush();
-                        }
-                    }
-                    synchronized (communicationQueue) {
-                        communicationQueue.wait();
-                    }
-                } catch (IOException | InterruptedException e) {
-                    LOGGER.error(null, e);
-                }
-            }
-        }
-    }
+//    // WORK IN PROGRESS ! :
+//    
+//    public static void printMessageInGui(String message) {
+//        CommunicationThread.communicationQueue.offer(message);
+//        synchronized (CommunicationThread.communicationQueue) {
+//            CommunicationThread.communicationQueue.notifyAll();
+//        }
+//    }
+//    
+//    private static class CommunicationThread implements Runnable {
+//
+//        public static final Queue<String> communicationQueue = new ConcurrentLinkedQueue<>();
+//
+//        private final PipedOutputStream serverOutput;
+//
+//        public CommunicationThread(PipedOutputStream serverOutput) {
+//            this.serverOutput = serverOutput;
+//        }
+//
+//        @Override
+//        public void run() {
+//            while (true) {
+//                try {
+//                    while (!communicationQueue.isEmpty()) {
+//                        String message = communicationQueue.poll();
+//                        if (message != null) {
+//                            this.serverOutput.write((message + "\n").getBytes());
+//                            this.serverOutput.flush();
+//                        }
+//                    }
+//                    synchronized (communicationQueue) {
+//                        communicationQueue.wait();
+//                    }
+//                } catch (IOException | InterruptedException e) {
+//                    LOGGER.error(null, e);
+//                }
+//            }
+//        }
+//    }
 }

@@ -7,7 +7,7 @@ public class Play implements CommandInterface {
 
 	@Override
 	public String apply() {
-		Server.printMessageInGui("[Client] Send Play command");
+		//Server.printMessageInGui("[Client] Send Play command");
 		LOGGER.info("Playing reading queue");
 		ReadingQueueManager.getInstance().play();
 		return "#PLAY OK";

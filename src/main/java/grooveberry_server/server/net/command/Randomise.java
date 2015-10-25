@@ -16,7 +16,7 @@ public class Randomise implements CommandInterface {
 
 	@Override
 	public String apply() {
-		Server.printMessageInGui("[Client] Send Randomize command");
+		//Server.printMessageInGui("[Client] Send Randomize command");
 		LOGGER.info("Randomising reading queue");
 		ReadingQueueManager.getInstance().randomise();
 		return "#RANDOMISE OK";

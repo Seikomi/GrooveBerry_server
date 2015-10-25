@@ -14,6 +14,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Thread de gestion des commandes envoyer au serveur par socket.
+ * 
+ * @author nicolas
+ *
+ */
 public class ClientTreatment implements Runnable {
 	private final static Logger LOGGER = LoggerFactory.getLogger(ClientTreatment.class);
 	
@@ -40,14 +46,15 @@ public class ClientTreatment implements Runnable {
 				String receivingMessage = (String) this.in.readObject();
 				if (receivingMessage == null) {
 					LOGGER.info("One Client is disconnected");
-					Server.printMessageInGui("One Client is disconnected");
+					//Server.printMessageInGui("One Client is disconnected");
 					
 					connectionClosed = true;
 				}
 				
 				commandeExecute(receivingMessage);
 			} catch (IOException | ClassNotFoundException e) {
-				LOGGER.info("One client disapear !!! - End command Thread", e);
+				LOGGER.info("One client disapear !!! - End command Thread");
+				LOGGER.debug("stack trace :", e);
 				connectionClosed = true;
 			}
 		}
@@ -87,17 +94,6 @@ public class ClientTreatment implements Runnable {
 		} else {
 			sendMessage(commandReturnState);
 		}
-//		CommandFactory commandeFactory = new CommandFactory(receivingMessage, pipedOutput);
-//		CommandIntf commande = commandeFactory.getCommande();
-//		if (commande != null) {
-//			String commandReturnState = commande.execute();
-//			if ("#EXIT OK".equals(commandReturnState)) {
-//				connectionClosed = true;
-//			}
-//			sendMessage(commandReturnState);
-//		} else {
-//			sendMessage(receivingMessage);
-//		}
 	}
 
 }
