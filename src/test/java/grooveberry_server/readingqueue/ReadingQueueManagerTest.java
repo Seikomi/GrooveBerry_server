@@ -93,7 +93,6 @@ public class ReadingQueueManagerTest {
 			for (int i = 0; i < readingQueue.size(); i++) {
 				readingQueueManager.next();
 				trackIndexTab[i] = readingQueue.getCurrentTrackPosition();
-				System.out.println(readingQueue.getCurrentTrackPosition());
 			}
 			tryList.add(trackIndexTab);
 			tryIndex++;

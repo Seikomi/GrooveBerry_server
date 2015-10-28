@@ -2,10 +2,7 @@ package grooveberry_server.server.net;
 
 import grooveberry_server.audiofile.AudioFile;
 import grooveberry_server.audiofile.AudioFileDirectoryScanner;
-import grooveberry_server.readingqueue.ReadingQueue;
 import grooveberry_server.readingqueue.ReadingQueueManager;
-import grooveberry_server.server.net.command.CommandFactory;
-import grooveberry_server.server.net.command.CommandInterface;
 import grooveberry_server.server.net.thread.ClientAccept;
 
 import java.io.File;
@@ -15,9 +12,6 @@ import java.net.ServerSocket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
