@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.PipedInputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

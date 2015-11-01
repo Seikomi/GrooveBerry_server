@@ -1,9 +1,5 @@
 package grooveberry_server.server.net.command;
 
-import grooveberry_server.audiofile.manager.FileTransfertManager;
-import grooveberry_server.server.net.Server;
-
-import java.nio.file.Path;
 
 public class Upload implements CommandInterface {
 

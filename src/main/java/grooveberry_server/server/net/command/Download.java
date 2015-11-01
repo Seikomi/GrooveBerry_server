@@ -1,9 +1,5 @@
 package grooveberry_server.server.net.command;
 
-import java.nio.file.Path;
-
-import grooveberry_server.audiofile.manager.FileTransfertManager;
-import grooveberry_server.server.net.Server;
 
 public class Download implements CommandInterface {
 

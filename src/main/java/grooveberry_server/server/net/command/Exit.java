@@ -1,7 +1,5 @@
 package grooveberry_server.server.net.command;
 
-import grooveberry_server.server.net.Server;
-
 public class Exit implements CommandInterface {
 
 	@Override

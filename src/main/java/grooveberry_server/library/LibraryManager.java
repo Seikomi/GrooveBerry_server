@@ -2,7 +2,6 @@ package grooveberry_server.library;
 
 import grooveberry_server.audiofile.AudioFile;
 import grooveberry_server.audiofile.AudioFileDirectoryScanner;
-import grooveberry_server.readingqueue.ReadingQueueManager;
 import grooveberry_server.server.net.Server;
 
 import java.io.IOException;

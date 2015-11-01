@@ -2,7 +2,6 @@ package grooveberry_server.library;
 
 import grooveberry_server.audiofile.AudioFile;
 
-import java.io.File;
 import java.util.List;
 
 public class Library {

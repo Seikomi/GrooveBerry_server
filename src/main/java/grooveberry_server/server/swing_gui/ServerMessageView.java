@@ -2,7 +2,6 @@ package grooveberry_server.server.swing_gui;
 
 import java.io.IOException;
 import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 
 import javax.swing.JTextArea;
 
