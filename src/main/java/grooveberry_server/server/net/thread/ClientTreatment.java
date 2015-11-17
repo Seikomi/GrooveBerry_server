@@ -21,15 +21,14 @@ public class ClientTreatment implements Runnable {
 	
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
-	private PipedOutputStream pipedOutput;
+	//private PipedOutputStream pipedOutput;
 	
 	private boolean connectionClosed;
 	
-	public ClientTreatment(ObjectInputStream in, ObjectOutputStream out,
-						   PipedOutputStream pipedOutput) throws IOException {
+	public ClientTreatment(ObjectInputStream in, ObjectOutputStream out) throws IOException {
 		this.in = in;
 		this.out = out;
-		this.pipedOutput = pipedOutput;
+		//this.pipedOutput = pipedOutput;
 	}
 
 	@Override
@@ -54,19 +53,6 @@ public class ClientTreatment implements Runnable {
 				connectionClosed = true;
 			}
 		}
-		closeFileUploadThreads(); //TODO Implement close download thread
-	}
-
-	private void closeFileUploadThreads() {
-		try {
-			this.pipedOutput.write(-1);
-			this.pipedOutput.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
 	}
 
 	private void sendMessage(String message) {

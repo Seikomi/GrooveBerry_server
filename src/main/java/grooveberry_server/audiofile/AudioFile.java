@@ -9,10 +9,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
-/**
- * 
- * @author nicolas
- */
+
 public class AudioFile extends Observable implements Runnable, Serializable
 {
 

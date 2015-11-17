@@ -2,7 +2,7 @@ package grooveberry_server.server.net.command;
 
 import grooveberry_server.readingqueue.ReadingQueueManager;
 
-public class Pause implements CommandInterface {
+class Pause implements CommandInterface {
 
 	@Override
 	public String apply() {

@@ -2,7 +2,7 @@ package grooveberry_server.server.net.command;
 
 import grooveberry_server.readingqueue.ReadingQueueManager;
 
-public class VolumeUp implements CommandInterface {
+class VolumeUp implements CommandInterface {
 	
 	@Override
 	public String apply() {

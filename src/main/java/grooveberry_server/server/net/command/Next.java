@@ -3,7 +3,7 @@ package grooveberry_server.server.net.command;
 import grooveberry_server.readingqueue.ReadingQueueManager;
 
 
-public class Next implements CommandInterface {
+class Next implements CommandInterface {
 
 	@Override
 	public String apply() {

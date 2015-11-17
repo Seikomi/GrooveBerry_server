@@ -1,6 +1,6 @@
 package grooveberry_server.server.net.command;
 
-public class Exit implements CommandInterface {
+class Exit implements CommandInterface {
 
 	@Override
 	public String apply() {

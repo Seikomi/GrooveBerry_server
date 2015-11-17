@@ -16,11 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * La classe Server est un server de musique pilotable à distance par sockets
+ * La classe Server construit un server de musique pilotable à distance par sockets
  * Java. <br/>
- * Il peut etre lancer sous deux modes selon le constructeur choisi :
- * avec ou sans stream de sortie (voir {@link PipedOutputStream}).
- * Il utilise deux ports définies par les parametres :
+ * Il utilise les deux ports définies par les parametres de son constructeur:
  * <ul>
  * <li>{@code int serverCommandePort} : port gérant les commandes
  * (TODO définie selon un protocole) envoyées au serveur</li>
@@ -44,15 +42,12 @@ import org.slf4j.LoggerFactory;
 public class Server {
     private final static Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
-    private PipedOutputStream serverOutput;
-
+    public static final String userHomePath = System.getProperty("user.home");
+	
     private ServerSocket serverSocketCommande;
     private ServerSocket serverSocketTransfert;
 
     private Thread connectionClientsThread;
-    private Thread communicationThread;
-
-	public static final String userHomePath = System.getProperty("user.home");
     
 	/**
 	 * Créer une instance de serveur GrooveBerry utilisant deux sockets.
@@ -62,21 +57,7 @@ public class Server {
 	 * @throws InterruptedException
 	 */
     public Server(int serverCommandePort, int serverTransfertPort) throws InterruptedException {
-        this(serverCommandePort, serverTransfertPort, null);
-    }
-    
-    /**
-     * Créer une instance de serveur GrooveBerry utilisant deux sockets. <br/>
-     * Peur communiquer avec un thread via {@code serverOutput}
-     * 
-     * @param serverCommandePort
-     * @param serverTransfertPort
-     * @param serverOutput
-     * @throws InterruptedException
-     */
-    public Server(int serverCommandePort, int serverTransfertPort, PipedOutputStream serverOutput) throws InterruptedException {
-        this.serverOutput = serverOutput;
-        try {
+    	try {
             this.serverSocketCommande = new ServerSocket(serverCommandePort);
             this.serverSocketTransfert = new ServerSocket(serverTransfertPort);
         } catch (IOException e) {
@@ -95,6 +76,14 @@ public class Server {
         startThreadsServer();
     }
     
+    public void restart() {
+    	// TODO
+    }
+    
+    public void stop() {
+    	// TODO
+    }
+        
     /**
      * Initialise les fichiers et dossiers nécessaires au serveur.
      */
@@ -167,60 +156,13 @@ public class Server {
     }
     
     /**
-     * Lance le thread de gestions des commandes et le thread de gestion des
-     * transfert de fichiers.
+     * Lance le thread de gestions des clients
      */
     private void startThreadsServer() {
         connectionClientsThread = new Thread(new ClientAccept(serverSocketCommande, serverSocketTransfert));
         connectionClientsThread.setName("ClientAccept");
         connectionClientsThread.start();
         LOGGER.debug("Start ClientAccept Thread");
-        
-//        if (serverOutput != null) {
-//            communicationThread = new Thread(new CommunicationThread(serverOutput));
-//            communicationThread.setName("CommunicationToGui");
-//            communicationThread.start();
-//            LOGGER.debug("Start CommunicationToGui Thread");
-//        }
     }
-    
-//    // WORK IN PROGRESS ! :
-//    
-//    public static void printMessageInGui(String message) {
-//        CommunicationThread.communicationQueue.offer(message);
-//        synchronized (CommunicationThread.communicationQueue) {
-//            CommunicationThread.communicationQueue.notifyAll();
-//        }
-//    }
-//    
-//    private static class CommunicationThread implements Runnable {
-//
-//        public static final Queue<String> communicationQueue = new ConcurrentLinkedQueue<>();
-//
-//        private final PipedOutputStream serverOutput;
-//
-//        public CommunicationThread(PipedOutputStream serverOutput) {
-//            this.serverOutput = serverOutput;
-//        }
-//
-//        @Override
-//        public void run() {
-//            while (true) {
-//                try {
-//                    while (!communicationQueue.isEmpty()) {
-//                        String message = communicationQueue.poll();
-//                        if (message != null) {
-//                            this.serverOutput.write((message + "\n").getBytes());
-//                            this.serverOutput.flush();
-//                        }
-//                    }
-//                    synchronized (communicationQueue) {
-//                        communicationQueue.wait();
-//                    }
-//                } catch (IOException | InterruptedException e) {
-//                    LOGGER.error(null, e);
-//                }
-//            }
-//        }
-//    }
+
 }

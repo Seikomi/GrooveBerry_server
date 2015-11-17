@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @FunctionalInterface
-public interface CommandInterface {
+interface CommandInterface {
 	public final static Logger LOGGER = LoggerFactory.getLogger(ClientTreatment.class);
 	
 	public String apply();

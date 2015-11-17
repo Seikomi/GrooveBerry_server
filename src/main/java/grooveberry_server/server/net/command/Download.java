@@ -1,7 +1,7 @@
 package grooveberry_server.server.net.command;
 
 
-public class Download implements CommandInterface {
+class Download implements CommandInterface {
 
 	@Override
 	public String apply() {

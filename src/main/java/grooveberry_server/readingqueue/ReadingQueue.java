@@ -23,7 +23,7 @@ import java.util.List;
  * @author Enzo Alunni Bagarelli
  * @version 1.0
  */
-public final class ReadingQueue {
+final class ReadingQueue {
 
 	/* Singleton Pattern */
 	private static ReadingQueue instance;

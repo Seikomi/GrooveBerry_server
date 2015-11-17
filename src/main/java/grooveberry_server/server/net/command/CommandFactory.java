@@ -21,7 +21,7 @@ public class CommandFactory {
 	}
 
 	public void listCommands() {
-		// using stream (Java 8)
+		// utilisation des stream (Java 8)
 		System.out.println("Commands enabled :");
 		this.commands.keySet().stream().forEach(System.out::println);
 	}
@@ -30,7 +30,7 @@ public class CommandFactory {
 	public static CommandFactory init() {
 		CommandFactory cf = new CommandFactory();
 		
-		// commands are added here using lambda. It also possible to dynamically add commands without editing code.
+		// les commandes sont ajoutées ici en utilisant les expressions lambda.
 		cf.addCommand("#PLAY", new Play());
 		cf.addCommand("#PAUSE", new Pause());
 		cf.addCommand("#NEXT", new Next());

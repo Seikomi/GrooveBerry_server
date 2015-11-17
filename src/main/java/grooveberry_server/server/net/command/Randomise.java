@@ -7,11 +7,7 @@ package grooveberry_server.server.net.command;
 
 import grooveberry_server.readingqueue.ReadingQueueManager;
 
-/**
- *
- * @author nicolas
- */
-public class Randomise implements CommandInterface {
+class Randomise implements CommandInterface {
 
 	@Override
 	public String apply() {

@@ -1,7 +1,7 @@
 package grooveberry_server.server.net.command;
 
 
-public class Upload implements CommandInterface {
+class Upload implements CommandInterface {
 
 	@Override
 	public String apply() {
