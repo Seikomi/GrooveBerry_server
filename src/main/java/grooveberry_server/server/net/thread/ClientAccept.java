@@ -59,7 +59,7 @@ public class ClientAccept implements Runnable {
 			ObjectOutputStream commandeOut = new ObjectOutputStream(this.socketCommand.getOutputStream());
 			ObjectInputStream commandeIn = new ObjectInputStream(this.socketCommand.getInputStream());
 	        
-			Thread treatmentThread = new Thread(new ClientTreatment(commandeIn, commandeOut)); //TODO Named threads and logs
+			Thread treatmentThread = new Thread(new ClientTreatment(commandeIn, commandeOut));
 			treatmentThread.setName("TreatmentThread");
 			treatmentThread.start();
 			LOGGER.debug("Start commande Thread");

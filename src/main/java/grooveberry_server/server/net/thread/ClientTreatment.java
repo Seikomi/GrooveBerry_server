@@ -21,14 +21,12 @@ public class ClientTreatment implements Runnable {
 	
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
-	//private PipedOutputStream pipedOutput;
 	
 	private boolean connectionClosed;
 	
 	public ClientTreatment(ObjectInputStream in, ObjectOutputStream out) throws IOException {
 		this.in = in;
 		this.out = out;
-		//this.pipedOutput = pipedOutput;
 	}
 
 	@Override
