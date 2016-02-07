@@ -1,0 +1,13 @@
+package grooveberryserver.server.net.command;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import grooveberryserver.server.net.thread.ClientTreatment;
+
+@FunctionalInterface
+interface CommandInterface {
+	public final static Logger LOGGER = LoggerFactory.getLogger(ClientTreatment.class);
+	
+	public String apply();
+}
