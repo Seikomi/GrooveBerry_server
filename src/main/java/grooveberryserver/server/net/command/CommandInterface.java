@@ -7,7 +7,7 @@ import grooveberryserver.server.net.thread.ClientTreatment;
 
 @FunctionalInterface
 interface CommandInterface {
-	public final static Logger LOGGER = LoggerFactory.getLogger(ClientTreatment.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(ClientTreatment.class);
 	
 	public String apply(String[] args);
 }
