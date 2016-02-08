@@ -17,7 +17,7 @@ import grooveberryserver.server.net.command.CommandFactory;
  *
  */
 public class ClientTreatment implements Runnable {
-	private final static Logger LOGGER = LoggerFactory.getLogger(ClientTreatment.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClientTreatment.class);
 	
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
@@ -39,8 +39,6 @@ public class ClientTreatment implements Runnable {
 				String receivingMessage = (String) this.in.readObject();
 				if (receivingMessage == null) {
 					LOGGER.info("One Client is disconnected");
-					//Server.printMessageInGui("One Client is disconnected");
-					
 					connectionClosed = true;
 				}
 				

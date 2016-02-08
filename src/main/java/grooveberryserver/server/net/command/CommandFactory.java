@@ -1,10 +1,11 @@
 package grooveberryserver.server.net.command;
 
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 public class CommandFactory {
-	private final HashMap<String, CommandInterface>	commands;
-	
+	private final HashMap<String, CommandInterface> commands;
+
 	private CommandFactory() {
 		this.commands = new HashMap<>();
 	}
@@ -12,25 +13,30 @@ public class CommandFactory {
 	public void addCommand(String name, CommandInterface command) {
 		this.commands.put(name, command);
 	}
-	
-	public String executeCommand(String name) {
-		if ( this.commands.containsKey(name) ) {
-			return this.commands.get(name).apply();
+
+	public String executeCommand(String commandString) {
+		String toReturn = null;
+		
+		StringTokenizer stringTokenizer = new StringTokenizer(commandString);
+		String commandHeader = stringTokenizer.nextToken();
+		if (commands.containsKey(commandHeader)) {
+			if (stringTokenizer.hasMoreTokens()) {
+				String[] args = new String[stringTokenizer.countTokens()];
+				for (int i = 0; i < args.length; i++) {
+					args[i] = stringTokenizer.nextToken();
+				}
+				toReturn = this.commands.get(commandHeader).apply(args);
+			} else {
+				toReturn = this.commands.get(commandHeader).apply(null);
+			}
 		}
-		return null;
+
+		return toReturn;
 	}
 
-	public void listCommands() {
-		// utilisation des stream (Java 8)
-		System.out.println("Commands enabled :");
-		this.commands.keySet().stream().forEach(System.out::println);
-	}
-	
-	/* Factory pattern */
 	public static CommandFactory init() {
 		CommandFactory cf = new CommandFactory();
-		
-		// les commandes sont ajoutées ici en utilisant les expressions lambda.
+
 		cf.addCommand("#PLAY", new Play());
 		cf.addCommand("#PAUSE", new Pause());
 		cf.addCommand("#NEXT", new Next());
@@ -40,7 +46,7 @@ public class CommandFactory {
 		cf.addCommand("#VOLUP", new VolumeUp());
 		cf.addCommand("#SONG", new WhatIsThisSong());
 		cf.addCommand("#LIST", new WhatIsTheReadingQueue());
-		
+
 		return cf;
 	}
 }

@@ -10,7 +10,7 @@ import grooveberryserver.readingqueue.ReadingQueueManager;
 class Randomise implements CommandInterface {
 
 	@Override
-	public String apply() {
+	public String apply(String[] args) {
 		//Server.printMessageInGui("[Client] Send Randomize command");
 		LOGGER.info("Randomising reading queue");
 		ReadingQueueManager.getInstance().randomise();

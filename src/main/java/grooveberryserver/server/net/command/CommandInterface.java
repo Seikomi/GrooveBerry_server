@@ -9,5 +9,5 @@ import grooveberryserver.server.net.thread.ClientTreatment;
 interface CommandInterface {
 	public final static Logger LOGGER = LoggerFactory.getLogger(ClientTreatment.class);
 	
-	public String apply();
+	public String apply(String[] args);
 }
