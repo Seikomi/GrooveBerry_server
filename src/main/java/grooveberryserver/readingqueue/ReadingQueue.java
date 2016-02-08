@@ -1,6 +1,5 @@
 package grooveberryserver.readingqueue;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,26 +24,12 @@ import grooveberryserver.audiofile.AudioFile;
  */
 final class ReadingQueue {
 
-	/* Singleton Pattern */
 	private static ReadingQueue instance;
-	
-	protected static synchronized ReadingQueue getInstance() {
-		if (instance == null) {
-			instance = new ReadingQueue();
-		}
-		return instance;
-	}
-
+	private LinkedList<AudioFile> queue;
 	private	AudioFile currentTrack;
 	private int currentTrackIndex;
 	private boolean randomised;
-
-    public void setRandomised(boolean randomised) {
-        this.randomised = randomised;
-    }
 	
-	private LinkedList<AudioFile> queue; //TODO Validate type of this container 
-
 	/**
 	 * Construire un fil de lecture vide.
 	 *
@@ -55,7 +40,16 @@ final class ReadingQueue {
         this.randomised = false; // active les playlist aleatoire
 	}
 	
+	protected static synchronized ReadingQueue getInstance() {
+		if (instance == null) {
+			instance = new ReadingQueue();
+		}
+		return instance;
+	}	
 
+    public void setRandomised(boolean randomised) {
+        this.randomised = randomised;
+    }
 	
 	/**
 	 * Vérifier si le fil de lecture est vide.
@@ -112,12 +106,12 @@ final class ReadingQueue {
 	}
 	
 	/**
-	 * Ajouter l'ensemble d'une playlist à la fin du fil de lecture. //TODO class Playlist ?
+	 * Ajouter l'ensemble d'une playlist à la fin du fil de lecture.
 	 * 
 	 * @param playlist
 	 * 		la playlist à ajouter
 	 */
-	public void addList(ArrayList<AudioFile> playlist) {
+	public void addList(List<AudioFile> playlist) {
 		if (this.isEmpty()) {
 			this.currentTrack = playlist.get(0);
 			this.currentTrackIndex = 0;
@@ -126,7 +120,7 @@ final class ReadingQueue {
 	}
 	
 	/** 
-	 * Ajouter l'ensemble d'une playlist à une positon spécifique dans le fil //TODO class Playlist ?
+	 * Ajouter l'ensemble d'une playlist à une positon spécifique dans le fil
 	 * de lecture.
 	 * 
 	 * @param index
@@ -134,7 +128,7 @@ final class ReadingQueue {
 	 * @param playlist
 	 * 		la playlist à ajouter
 	 */
-	public void addListAt(int index, ArrayList<AudioFile> playlist) {
+	public void addListAt(int index, List<AudioFile> playlist) {
 		this.queue.addAll(index, playlist);
 	}
 

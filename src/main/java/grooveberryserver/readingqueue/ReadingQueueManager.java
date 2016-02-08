@@ -1,6 +1,6 @@
 package grooveberryserver.readingqueue;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
@@ -11,25 +11,21 @@ import org.slf4j.LoggerFactory;
 import grooveberryserver.audiofile.AudioFile;
 import grooveberryserver.systemvolume.AudioUtility;
 
-
 public final class ReadingQueueManager implements Observer {
-	
-	/* Singleton Pattern */
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReadingQueueManager.class);
 	private static ReadingQueueManager instance;
-	
+	private ReadingQueue readingQueue = ReadingQueue.getInstance();
+
+	private ReadingQueueManager() {
+
+	}
+
 	public static synchronized ReadingQueueManager getInstance() {
 		if (instance == null) {
 			instance = new ReadingQueueManager();
 		}
 		return instance;
-	}
-	
-	private final static Logger LOGGER = LoggerFactory.getLogger(ReadingQueueManager.class);
-	
-	private ReadingQueue readingQueue = ReadingQueue.getInstance();
-	
-	private ReadingQueueManager() {
-		
 	}
 
 	/**
@@ -37,33 +33,32 @@ public final class ReadingQueueManager implements Observer {
 	 */
 	public void next() {
 		readingQueue.getCurrentTrack().deleteObservers();
-		
+
 		int trackIndex = readingQueue.getCurrentTrackPosition();
 		if ((trackIndex + 1 < readingQueue.size()) || readingQueue.isRandomised()) {
-				changeTrack(true);
+			changeTrack(true);
 		} else {
 			readingQueue.setCurrentTrackPostion(0);
 		}
 		readingQueue.getCurrentTrack().addObserver(this);
 		readingQueue.getCurrentTrack().play();
-		
-		
+
 	}
-	
+
 	/**
 	 * Passer au morceau précédent dans le fil de lecture
 	 */
 	public void prev() {
 		readingQueue.getCurrentTrack().deleteObservers();
-		
+
 		int trackIndex = readingQueue.getCurrentTrackPosition();
-		if ((trackIndex - 1 >= 0)) {
+		if (trackIndex - 1 >= 0) {
 			changeTrack(false);
 			readingQueue.getCurrentTrack().addObserver(this);
 			readingQueue.getCurrentTrack().play();
 		}
 	}
-	
+
 	/**
 	 * Activer/désactiver le passage aléatoire à un morceau
 	 */
@@ -71,20 +66,20 @@ public final class ReadingQueueManager implements Observer {
 		readingQueue.getCurrentTrack().deleteObservers();
 		ReadingQueue.getInstance().getCurrentTrack().addObserver(this);
 		readingQueue.getCurrentTrack().play();
-		
+
 	}
 
 	public void pause() {
 		readingQueue.getCurrentTrack().pause();
-		
+
 	}
-	
+
 	public void randomise() {
-	    if (readingQueue.isRandomised()) {
-	        readingQueue.setRandomised(false);
-	    } else {
-	        readingQueue.setRandomised(true);
-	    }
+		if (readingQueue.isRandomised()) {
+			readingQueue.setRandomised(false);
+		} else {
+			readingQueue.setRandomised(true);
+		}
 	}
 
 	public void volumeUp() {
@@ -94,7 +89,7 @@ public final class ReadingQueueManager implements Observer {
 		} else if (volume > 0.9 && volume < 1f) {
 			AudioUtility.setMasterOutputVolume(1f);
 		}
-			
+
 	}
 
 	public void volumeDown() {
@@ -104,12 +99,12 @@ public final class ReadingQueueManager implements Observer {
 		} else if (volume < 0.1f && volume > 0f) {
 			AudioUtility.setMasterOutputVolume(0f);
 		}
-		
+
 	}
 
 	public String whatIsThisSong() {
 		return readingQueue.getCurrentTrack().getName();
-		
+
 	}
 
 	public String whatIsTheReadingQueue() {
@@ -124,17 +119,13 @@ public final class ReadingQueueManager implements Observer {
 		return stringBuilder.toString();
 	}
 
-	public void scan() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	/**
-	 * Mettre fin au morceau en cours de lecture en fonction de 
+	 * Mettre fin au morceau en cours de lecture en fonction de
 	 * <code>trackFlags</code>.
+	 * 
 	 * @param trackFlags
-	 * 		Le statut d'un fichier audio.
-	 * 	
+	 *            Le statut d'un fichier audio.
+	 * 
 	 * @see AudioFile, AudioFile.TrackFlags
 	 */
 	private void endCurrentTrack(TrackFlags trackFlags) {
@@ -151,19 +142,20 @@ public final class ReadingQueueManager implements Observer {
 			readingQueue.getCurrentTrack().loop();
 		}
 	}
+
 	/**
-	 * Changer le morceau selon <code>forward</code>, <code>isRandomised</code> et
-	 * <code>trackFlags</code>.<br/>
+	 * Changer le morceau selon <code>forward</code>, <code>isRandomised</code>
+	 * et <code>trackFlags</code>.<br/>
 	 * 
 	 * @param forward
-	 * 		Si <code>forward = true</code> alors passe au morceau suivant, sinon passe
-	 * 		au morceau précédent. 
+	 *            Si <code>forward = true</code> alors passe au morceau suivant,
+	 *            sinon passe au morceau précédent.
 	 * @param trackFlags
-	 * 		Le statut d'un fichier audio.
-	 * 	
+	 *            Le statut d'un fichier audio.
+	 * 
 	 * @see AudioFile, AudioFile.TrackFlags
 	 */
-	private void changeCurrentTrack(boolean forward, TrackFlags trackFlags) {
+	private void changeCurrentTrack(boolean forward) {
 		int shiftInt;
 		if (readingQueue.isRandomised()) {
 			Random rand = new Random();
@@ -171,16 +163,17 @@ public final class ReadingQueueManager implements Observer {
 		} else if (forward) {
 			shiftInt = readingQueue.getCurrentTrackPosition() + 1;
 		} else {
-			shiftInt =  readingQueue.getCurrentTrackPosition() - 1;
+			shiftInt = readingQueue.getCurrentTrackPosition() - 1;
 		}
 		readingQueue.setCurrentTrackPostion(shiftInt);
 	}
-	
+
 	/**
-	 * Changer le statut du morceau en cours de lecture en fonction de 
+	 * Changer le statut du morceau en cours de lecture en fonction de
 	 * <code>trackFlags</code>.
+	 * 
 	 * @param trackFlags
-	 * 		Le statut d'un fichier audio.
+	 *            Le statut d'un fichier audio.
 	 * 
 	 * @see AudioFile, AudioFile.TrackFlags
 	 */
@@ -193,23 +186,23 @@ public final class ReadingQueueManager implements Observer {
 		}
 
 	}
-	
+
 	/**
 	 * Changer le morceau selon <code>forward</code>.
 	 * 
 	 * @param forward
-	 * 		Si <code>forward = true</code> alors passe au morceau suivant, sinon passe
-	 * 		au morceau précedent. 
+	 *            Si <code>forward = true</code> alors passe au morceau suivant,
+	 *            sinon passe au morceau précedent.
 	 */
-	private void changeTrack(boolean forward){
+	private void changeTrack(boolean forward) {
 		TrackFlags previousTrackFlags = new TrackFlags(readingQueue.getCurrentTrack());
-		
+
 		endCurrentTrack(previousTrackFlags);
-		changeCurrentTrack(forward, previousTrackFlags);
+		changeCurrentTrack(forward);
 		changeCurrentTrackStatus(previousTrackFlags);
 	}
 
-    /**
+	/**
 	 * Structure de données represantant l'etat d'un fichier audio.
 	 * 
 	 * @see AudioFile
@@ -218,17 +211,17 @@ public final class ReadingQueueManager implements Observer {
 	 * @version 1.0
 	 */
 	private class TrackFlags {
-		public boolean muted;
-		public boolean looped;
-		public boolean played;
-		public boolean paused;
-		
+		private boolean muted;
+		private boolean looped;
+		private boolean played;
+		private boolean paused;
+
 		/**
 		 * Construire une structure de données représantant le fichier audio
 		 * <code>track</code>.
 		 * 
 		 * @param track
-		 * 		le fichier audio a analyser.
+		 *            le fichier audio a analyser.
 		 * 
 		 * @see AudioFile
 		 */
@@ -239,49 +232,42 @@ public final class ReadingQueueManager implements Observer {
 			paused = track.isPaused();
 		}
 	}
-	
+
 	@Override
 	public void update(Observable o, Object arg) {
 		if (o instanceof AudioFile) {
 			String state = (String) arg;
-			if (state.equals("EndOfPlay")) {
+			if ("EndOfPlay".equals(state)) {
 				endOfPlay();
-			}
-			else if (state.equals("StopOfPlay")) {
+			} else if ("StopOfPlay".equals(state)) {
 				stopOfPlay();
 			}
 		}
-		
+
 	}
 
 	/**
-	 * Événement qui survient à la fin de la lecture d'un morceau dans
-	 * le fil de lecture.
+	 * Événement qui survient à la fin de la lecture d'un morceau dans le fil de
+	 * lecture.
 	 */
 	private void endOfPlay() {
 		next();
-		
+
 		LOGGER.info("End of Play event : switch to next track");
-		
+
 	}
-	
+
 	/**
-	 * Événement qui survient à la mise sur stop d'un morceau dans
-	 * le fil de lecture.
+	 * Événement qui survient à la mise sur stop d'un morceau dans le fil de
+	 * lecture.
 	 */
 	private void stopOfPlay() {
 		LOGGER.info("Stop of Play event");
 	}
 
-	public void addToReadingQueue(ArrayList<AudioFile> audioFileList) {
+	public void addToReadingQueue(List<AudioFile> audioFileList) {
 		readingQueue.addList(audioFileList);
-		
+
 	}
-
-
-
-
-
-
 
 }
