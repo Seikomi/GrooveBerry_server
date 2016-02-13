@@ -5,7 +5,6 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 import grooveberryserver.DataTransfertManager;
-import grooveberryserver.ServerProperties;
 
 public class CommandFactory {
 	private final HashMap<String, CommandInterface> commands;;
