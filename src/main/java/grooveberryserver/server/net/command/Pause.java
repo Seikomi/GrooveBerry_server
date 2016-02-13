@@ -5,10 +5,10 @@ import grooveberryserver.readingqueue.ReadingQueueManager;
 class Pause implements CommandInterface {
 
 	@Override
-	public String apply(String[] args) {
+	public String[] apply(String[] args) {
 		LOGGER.info("Pausing reading queue");
 		ReadingQueueManager.getInstance().pause();
-		return "#PAUSE OK";
+		return new String[] {"#PAUSE OK"};
 	}
 
 }

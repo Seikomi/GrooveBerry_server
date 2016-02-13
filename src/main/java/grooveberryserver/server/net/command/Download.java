@@ -4,7 +4,7 @@ package grooveberryserver.server.net.command;
 class Download implements CommandInterface {
 
 	@Override
-	public String apply(String[] args) {
+	public String[] apply(String[] args) {
 		// TODO Auto-generated method stub
 		return null;
 	}

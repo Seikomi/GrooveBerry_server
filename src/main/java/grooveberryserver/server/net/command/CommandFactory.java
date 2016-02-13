@@ -14,9 +14,9 @@ public class CommandFactory {
 		this.commands.put(name, command);
 	}
 
-	public String executeCommand(String commandString) {
-		String toReturn = null;
-		
+	public String[] executeCommand(String commandString) {
+		String[] toReturn = null;
+
 		StringTokenizer stringTokenizer = new StringTokenizer(commandString);
 		String commandHeader = stringTokenizer.nextToken();
 		if (commands.containsKey(commandHeader)) {

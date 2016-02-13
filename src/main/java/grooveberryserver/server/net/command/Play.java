@@ -5,10 +5,10 @@ import grooveberryserver.readingqueue.ReadingQueueManager;
 class Play implements CommandInterface {
 
 	@Override
-	public String apply(String[] args) {
+	public String[] apply(String[] args) {
 		LOGGER.info("Playing reading queue");
 		ReadingQueueManager.getInstance().play();
-		return "#PLAY OK";
+		return new String[] {"#PLAY OK"};
 	}
 
 }

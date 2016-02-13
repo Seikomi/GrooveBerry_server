@@ -64,13 +64,13 @@ public class ClientTreatment implements Runnable {
 	
 	private void commandeExecute(String receivingMessage) {
 		CommandFactory commandFactory = CommandFactory.init();
-		String commandReturnState = commandFactory.executeCommand(receivingMessage);
+		String[] commandReturnState = commandFactory.executeCommand(receivingMessage);
 		if (commandReturnState == null) {
 			sendMessage(receivingMessage);
-		} else if ("#EXIT OK".equals(commandReturnState)) {
+		} else if ("#EXIT OK".equals(commandReturnState[0])) {
 			connectionClosed = true;
 		} else {
-			sendMessage(commandReturnState);
+			sendMessage(commandReturnState[0]);
 		}
 	}
 

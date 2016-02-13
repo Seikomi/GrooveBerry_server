@@ -16,14 +16,14 @@ public class FileDownload implements Runnable {
 	public FileDownload(ObjectInputStream in) {
 		this.in = in;
 	}
-	
+
 	@Override
 	public void run() {
 		boolean connectionClosed = false;
 		while (!connectionClosed) {
 			try {
 				File fileReceive = (File) this.in.readObject();
-				
+
 				File newFile = new File("ServerFiles/" + fileReceive.getName());
 				if (!newFile.exists()) {
 					fileCopy(fileReceive, newFile);
@@ -39,21 +39,21 @@ public class FileDownload implements Runnable {
 				LOGGER.info("End FileDownload Thread", e);
 			}
 		}
-		
+
 	}
-	
+
 	private void fileCopy(File source, File destination) {
 		FileInputStream sourceStream = null;
 		FileOutputStream destinationStream = null;
 		try {
 			destination.createNewFile();
-		
+
 			sourceStream = new FileInputStream(source);
 			destinationStream = new FileOutputStream(destination);
-	
+
 			byte buffer[] = new byte[1024];
 			int numberOfReadingByte;
-			while((numberOfReadingByte = sourceStream.read(buffer)) != -1) {
+			while ((numberOfReadingByte = sourceStream.read(buffer)) != -1) {
 				destinationStream.write(buffer, 0, numberOfReadingByte);
 			}
 		} catch (IOException e) {

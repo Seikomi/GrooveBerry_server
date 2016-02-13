@@ -5,9 +5,9 @@ import grooveberryserver.readingqueue.ReadingQueueManager;
 class WhatIsTheReadingQueue implements CommandInterface {
 	
 	@Override
-	public String apply(String[] args) {
+	public String[] apply(String[] args) {
 		LOGGER.info("Questioning inference data base !");
-		return "#LIST " + ReadingQueueManager.getInstance().whatIsTheReadingQueue();
+		return new String[] {"#LIST " + ReadingQueueManager.getInstance().whatIsTheReadingQueue()};
 	}
 
 }

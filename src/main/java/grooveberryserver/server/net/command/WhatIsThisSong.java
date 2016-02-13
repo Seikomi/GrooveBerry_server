@@ -5,9 +5,9 @@ import grooveberryserver.readingqueue.ReadingQueueManager;
 class WhatIsThisSong implements CommandInterface {
 
 	@Override
-	public String apply(String[] args) {
+	public String[] apply(String[] args) {
 		LOGGER.info("Questioning inference data base !");
-		return "#SONG " + ReadingQueueManager.getInstance().whatIsThisSong();
+		return new String[] {"#SONG " + ReadingQueueManager.getInstance().whatIsThisSong()};
 	}
 
 }
