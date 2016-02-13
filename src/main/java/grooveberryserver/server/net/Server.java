@@ -37,9 +37,11 @@ public class Server {
     private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
     public static final String USER_HOME_PATH = System.getProperty("user.home");
+    
+    protected int serverCommandPort;
+    protected int serverDataPort;
 	
     private ServerSocket commandServerSocket;
-    private ServerSocket dataServerSocket;
 
     private Thread connectionClientsThread;
     
@@ -55,9 +57,10 @@ public class Server {
 	 * @throws InterruptedException
 	 */
     public Server(final int serverCommandPort, final int serverDataPort) throws InterruptedException {
+    	this.serverCommandPort = serverCommandPort;
+    	this.serverDataPort = serverDataPort;
     	try {
             this.commandServerSocket = new ServerSocket(serverCommandPort);
-            this.dataServerSocket = new ServerSocket(serverDataPort);
         } catch (IOException e) {
             LOGGER.error("Unexpexted socket deconnection", e);
         }
@@ -84,7 +87,15 @@ public class Server {
     	// TODO
     }
         
-    /**
+    public int getServerCommandPort() {
+		return serverCommandPort;
+	}
+
+	public int getServerDataPort() {
+		return serverDataPort;
+	}
+
+	/**
      * Initialize library directory and the .properties file.
      */
     private void initServerFiles() {
@@ -157,7 +168,7 @@ public class Server {
      * Start the client accept thread
      */
     private void startClientAcceptThread() {
-        connectionClientsThread = new Thread(new ClientAccept(commandServerSocket, dataServerSocket));
+        connectionClientsThread = new Thread(new ClientAccept(commandServerSocket));
         connectionClientsThread.setName("ClientAccept");
         connectionClientsThread.start();
         LOGGER.debug("Start ClientAccept Thread");

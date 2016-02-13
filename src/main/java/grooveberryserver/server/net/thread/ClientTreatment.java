@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PipedOutputStream;
+import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,8 @@ public class ClientTreatment implements Runnable {
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
 	
+	private Properties serverProperties;
+	
 	private boolean connectionClosed;
 	
 	public ClientTreatment(ObjectInputStream in, ObjectOutputStream out) throws IOException {
@@ -31,6 +34,7 @@ public class ClientTreatment implements Runnable {
 
 	@Override
 	public void run() {
+		serverProperties = readServerProperties();
 		sendMessage("#HELLO Welcome to GrooveBerry Server");
 		
 		connectionClosed = false;
@@ -51,6 +55,11 @@ public class ClientTreatment implements Runnable {
 		}
 	}
 
+	private Properties readServerProperties() {
+		LOGGER.debug("read server.properties file to the location :");
+		return null;
+	}
+
 	private void sendMessage(String message) {
 		try {
 			this.out.writeObject(message);
@@ -63,7 +72,7 @@ public class ClientTreatment implements Runnable {
 	}
 	
 	private void commandeExecute(String receivingMessage) {
-		CommandFactory commandFactory = CommandFactory.init();
+		CommandFactory commandFactory = CommandFactory.init(serverProperties);
 		String[] commandReturnState = commandFactory.executeCommand(receivingMessage);
 		if (commandReturnState == null) {
 			sendMessage(receivingMessage);

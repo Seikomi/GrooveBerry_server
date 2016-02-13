@@ -22,13 +22,11 @@ import org.slf4j.LoggerFactory;
  * @version 1.0
  */
 public class ClientAccept implements Runnable {
-	private final static Logger LOGGER = LoggerFactory.getLogger(ClientAccept.class);
+	private final Logger LOGGER = LoggerFactory.getLogger(ClientAccept.class);
 	
 	private ServerSocket serverCommandSocket;
-	private ServerSocket serverTransfertSocket; //TODO
 	
 	private Socket socketCommand;
-	private Socket socketFile; //TODO
 	
 	/**
 	 * Construit un thread pour accepter des clients.
@@ -36,9 +34,8 @@ public class ClientAccept implements Runnable {
 	 * @param serverCommandSocket la socket de communication de commande
 	 * @param serverTransfertSocket la socket de transfert de fichier
 	 */
-	public ClientAccept(ServerSocket serverCommandSocket, ServerSocket serverTransfertSocket) {
+	public ClientAccept(ServerSocket serverCommandSocket) {
 		this.serverCommandSocket = serverCommandSocket;
-		this.serverTransfertSocket = serverTransfertSocket;
 	}
 
 	@Override

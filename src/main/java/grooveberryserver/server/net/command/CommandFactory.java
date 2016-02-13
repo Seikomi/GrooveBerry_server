@@ -1,13 +1,22 @@
 package grooveberryserver.server.net.command;
 
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.StringTokenizer;
 
+import grooveberryserver.DataTransfertManager;
+import grooveberryserver.ServerProperties;
+
 public class CommandFactory {
-	private final HashMap<String, CommandInterface> commands;
+	private final HashMap<String, CommandInterface> commands;;
 
 	private CommandFactory() {
 		this.commands = new HashMap<>();
+	}
+
+	private static void sendServerProperties(Properties serverProperties) {
+		DataTransfertManager.getInstance().setServerProperties(serverProperties);
+		
 	}
 
 	public void addCommand(String name, CommandInterface command) {
@@ -34,9 +43,10 @@ public class CommandFactory {
 		return toReturn;
 	}
 
-	public static CommandFactory init() {
+	public static CommandFactory init(Properties serverProperties) {
 		CommandFactory cf = new CommandFactory();
-
+		sendServerProperties(serverProperties);
+		
 		cf.addCommand("#PLAY", new Play());
 		cf.addCommand("#PAUSE", new Pause());
 		cf.addCommand("#NEXT", new Next());
